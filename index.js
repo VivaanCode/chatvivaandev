@@ -4,9 +4,16 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
+const path = require('path');
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
+});
+
+app.get('/', function (req, res) {
+  // Use path.join to create a robust path to your index.html
+  // Assuming index.js is at the root and public/index.html exists
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // Routing
