@@ -19,6 +19,7 @@ app.get('/', function (req, res) {
 // Routing
 app.use(express.static('public'));
 
+console.log("67")
 // Chatroom
 
 var numUsers = 0;
