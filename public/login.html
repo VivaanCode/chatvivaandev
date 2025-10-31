@@ -4,58 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter Your Name</title>
+    <link rel="stylesheet" href="/style.css">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-        #login-container {
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        #username-input {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 250px;
-            box-sizing: border-box;
-        }
-        #submit-button {
-            padding: 10px 15px;
-            font-size: 16px;
-            margin-left: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+        /* Styles for the 'submit' button to match the dark theme */
+        .login.page .form button {
+            /* Basic appearance to fit the dark theme */
+            background-color: #444; /* Dark gray background */
+            color: #fff; /* White text */
+            
+            /* Spacing and shape */
+            padding: 10px 20px;
+            margin-top: 15px; /* Add some space below the input */
+            border: 2px solid #666; /* Light gray border for definition */
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 100%; /* Match the font size of the input/form */
+            
+            /* Hover effect for interactivity */
+            transition: background-color 0.3s;
         }
-        #submit-button:hover {
-            background-color: #0056b3;
+
+        .login.page .form button:hover {
+            background-color: #666; /* Slightly lighter on hover */
         }
     </style>
 </head>
 <body>
-    <div id="login-container">
-        <h2>Welcome to the Chat App!</h2>
-        <form onsubmit="handleLogin(event)">
+    <div class="login page">
+        <form class="form" onsubmit="handleLogin(event)">
             <input 
                 type="text" 
+                class="usernameInput" 
                 id="username-input" 
                 placeholder="name here" 
                 required 
                 autocomplete="off"
             />
-            <button id="submit-button" type="submit">Join Chat</button>
+            <button type="submit">submit</button>
         </form>
     </div>
 
