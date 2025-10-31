@@ -10,10 +10,18 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
+// --- MODIFICATION HERE ---
 app.get('/', function (req, res) {
-  // Use path.join to create a robust path to your index.html
-  // Assuming index.js is at the root and public/index.html exists
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  const username = req.query.usrnm;
+
+  if (username) {
+    // If ?usrnm is present, serve the main chat app (public/index.html)
+    // The client-side code in index.html will then use this username.
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+  } else {
+    // If ?usrnm is NOT present, serve the dedicated login page
+    res.sendFile(path.join(__dirname, 'public/login.html'));
+  }
 });
 
 // Routing
@@ -27,6 +35,8 @@ var numUsers = 0;
 io.on('connection', function (socket) {
   var addedUser = false;
 
+  // ... (rest of the socket.io logic remains the same) ...
+  
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
