@@ -1,14 +1,23 @@
 /* global io */
 
-$(function() {
+$(function () {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [
-    '#e21400', '#91580f', '#f8a700', '#f78b00',
-    '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-    '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+    "#e21400",
+    "#91580f",
+    "#f8a700",
+    "#f78b00",
+    "#58dc00",
+    "#287b00",
+    "#a8f07a",
+    "#4ae8c4",
+    "#3b88eb",
+    "#3824aa",
+    "#a700ff",
+    "#d300e7",
   ];
-  
+
   document.body.onload = function () {
     myFunction();
   };
@@ -16,19 +25,18 @@ $(function() {
   function myFunction() {
     setUsername();
   }
-  
-  
+
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  
+
   // Initialize variables
   var $window = $(window);
-  var $usernameInput = $('.usernameInput'); // Input for username
-  var $messages = $('.messages'); // Messages area
-  var $inputMessage = $('.inputMessage'); // Input message input box
+  var $usernameInput = $(".usernameInput"); // Input for username
+  var $messages = $(".messages"); // Messages area
+  var $inputMessage = $(".inputMessage"); // Input message input box
 
-  var $loginPage = $('.login.page'); // The login page
-  var $chatPage = $('.chat.page'); // The chatroom page
+  var $loginPage = $(".login.page"); // The login page
+  var $chatPage = $(".chat.page"); // The chatroom page
 
   // Prompt for setting a username
   var username;
@@ -39,8 +47,8 @@ $(function() {
 
   var socket = io();
 
-  function addParticipantsMessage (data) {
-    var message = '';
+  function addParticipantsMessage(data) {
+    var message = "";
     if (data.numUsers === 1) {
       message += "";
     } else {
@@ -50,46 +58,127 @@ $(function() {
   }
 
   // Sets the client's username
-  function setUsername () {
+  function setUsername() {
     username = urlParams.get("usrnm");
 
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
       $chatPage.show();
-      $loginPage.off('click');
+      $loginPage.off("click");
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
-      socket.emit('add user', username);
+      socket.emit("add user", username);
     }
   }
 
   // Sends a chat message
-  function sendMessage () {
-    var message = $inputMessage.val();
-    // Prevent markup from being injected into the message
+  function sendMessage() {
+    if (!connected) return;
+    let message = $inputMessage.val();
+    $inputMessage.val("");
     message = cleanInput(message);
-    // if there is a non-empty message and a socket connection
-    if (message && connected) {
-      $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        message: message
-      });
-      // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+    if (!message) return;
+
+    // Command handling (formerly containing Plus checks)
+    if (message.startsWith("/")) {
+      const command = message.slice(1);
+      switch (command) {
+        case "games": {
+          addChatMessage({
+            username: "495Bot",
+            message:
+              "<a target='_blank' href='https://oiuhygfghuiopijuhygftdrtyuiopiuytfrdf.netlify.app/'>Seraph</a>, <a target='_blank' href='https://43yrn34nycr8943yrnc8349yrc8934yr8943y.netlify.app/'>WhiteSpider</a></a>, <a target='_blank' href='https://lmaolmaolmaolmaovy8to34nuwigtrwiygyvu.netlify.app/library/'>ShrimplePlay</a>, <a target='_blank' href='https://github.com/Elite4r/Resent-Client/releases/tag/v4.0'>Minecraft</a>,",
+          });
+          return;
+        }
+        case "pb": {
+          window.open("https://pasteboard.co");
+          return;
+        }
+        case "samosa": {
+          location.href =
+            "https://www.corriecooks.com/wp-content/uploads/2023/05/Samosas.jpg";
+          return;
+        }
+        case "chappal": {
+          location.href =
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTviP2N_gKbJTe2FB1SYQMJne_v0gFS2LrgpbAMhofs7nHbjQ7FOdt1as0ZNvfnG3o_8mc:https://www.tiktok.com/api/img/%3FitemId%3D7126884326779882798%26location%3D0%26aid%3D1988&usqp=CAU";
+          return;
+        }
+        case "resent": {
+          alert("Server: 'wss://zentic.cc'");
+          window.open(
+            "https://github.com/Elite4r/Resent-Client/releases/tag/v4.0",
+          );
+          return;
+        }
+        case "clear": {
+          document.title = "New Tab";
+          return;
+        }
+        case "dad": {
+          socket.emit("new message", "bye bye :wave:");
+          location.href =
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkRR6jzS3deqw1BaFW8l7Wap8gnTUWDrmyPmo998FUgQ&s";
+          return;
+        }
+      }
+
+      // Command aliases/dictionary lookup
+      const a = {
+        idgas: "i dont give a shit",
+      };
+      if (Object.keys(a).includes(command)) {
+        message = a[command];
+      } else {
+        // If it's a '/' command that didn't match anything,
+        // we stop here so it's not sent as a regular message.
+        return;
+      }
     }
+
+    // Emoji replacement
+    const emojis = {
+      skull: "💀",
+      middle: "🖕",
+      thumb: "👍",
+      sob: "😭",
+      fire: "🔥",
+      100: "💯",
+      eggplant: "🍆",
+      sweat_smile: "😅",
+      peach: "🍑",
+      kiss: "😘",
+      think: "🤔",
+      sweat: "💦",
+      droplet: "💧",
+      wave: "👋",
+      joy: "😂",
+    };
+    Object.keys(emojis).forEach(
+      (emoji) => (message = message.replaceAll(`:${emoji}:`, emojis[emoji])),
+    );
+
+    // Emit the message to the server
+    socket.emit("new message", message);
+
+    // Add the message to the local chat display (no more Plus message function)
+    addChatMessage({
+      username: username,
+      message: message,
+    });
   }
 
   // Log a message
-  function log (message, options) {
-    var $el = $('<li>').addClass('log').text(message);
+  function log(message, options) {
+    var $el = $("<li>").addClass("log").text(message);
     addMessageElement($el, options);
   }
 
   // Adds the visual chat message to the message list
-  function addChatMessage (data, options) {
+  function addChatMessage(data, options) {
     // Don't fade the message in if there is an 'X was typing'
     var $typingMessages = getTypingMessages(data);
     options = options || {};
@@ -100,13 +189,12 @@ $(function() {
 
     var $usernameDiv = $('<span class="username"/>')
       .text(data.username)
-      .css('color', getUsernameColor(data.username));
-    var $messageBodyDiv = $('<span class="messageBody">')
-      .text(data.message);
+      .css("color", getUsernameColor(data.username));
+    var $messageBodyDiv = $('<span class="messageBody">').text(data.message);
 
-    var typingClass = data.typing ? 'typing' : '';
+    var typingClass = data.typing ? "typing" : "";
     var $messageDiv = $('<li class="message"/>')
-      .data('username', data.username)
+      .data("username", data.username)
       .addClass(typingClass)
       .append($usernameDiv, $messageBodyDiv);
 
@@ -114,14 +202,14 @@ $(function() {
   }
 
   // Adds the visual chat typing message
-  function addChatTyping (data) {
+  function addChatTyping(data) {
     data.typing = true;
-    data.message = 'is typing';
+    data.message = "is typing";
     addChatMessage(data);
   }
 
   // Removes the visual chat typing message
-  function removeChatTyping (data) {
+  function removeChatTyping(data) {
     getTypingMessages(data).fadeOut(function () {
       $(this).remove();
     });
@@ -132,17 +220,17 @@ $(function() {
   // options.fade - If the element should fade-in (default = true)
   // options.prepend - If the element should prepend
   //   all other messages (default = false)
-  function addMessageElement (el, options) {
+  function addMessageElement(el, options) {
     var $el = $(el);
 
     // Setup default options
     if (!options) {
       options = {};
     }
-    if (typeof options.fade === 'undefined') {
+    if (typeof options.fade === "undefined") {
       options.fade = true;
     }
-    if (typeof options.prepend === 'undefined') {
+    if (typeof options.prepend === "undefined") {
       options.prepend = false;
     }
 
@@ -159,24 +247,24 @@ $(function() {
   }
 
   // Prevents input from having injected markup
-  function cleanInput (input) {
-    return $('<div/>').text(input).text();
+  function cleanInput(input) {
+    return $("<div/>").text(input).text();
   }
 
   // Updates the typing event
-  function updateTyping () {
+  function updateTyping() {
     if (connected) {
       if (!typing) {
         typing = true;
-        socket.emit('typing');
+        socket.emit("typing");
       }
-      lastTypingTime = (new Date()).getTime();
+      lastTypingTime = new Date().getTime();
 
       setTimeout(function () {
-        var typingTimer = (new Date()).getTime();
+        var typingTimer = new Date().getTime();
         var timeDiff = typingTimer - lastTypingTime;
         if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-          socket.emit('stop typing');
+          socket.emit("stop typing");
           typing = false;
         }
       }, TYPING_TIMER_LENGTH);
@@ -184,18 +272,18 @@ $(function() {
   }
 
   // Gets the 'X is typing' messages of a user
-  function getTypingMessages (data) {
-    return $('.typing.message').filter(function (i) {
-      return $(this).data('username') === data.username;
+  function getTypingMessages(data) {
+    return $(".typing.message").filter(function (i) {
+      return $(this).data("username") === data.username;
     });
   }
 
   // Gets the color of a username through our hash function
-  function getUsernameColor (username) {
+  function getUsernameColor(username) {
     // Compute hash code
     var hash = 7;
     for (var i = 0; i < username.length; i++) {
-       hash = username.charCodeAt(i) + (hash << 5) - hash;
+      hash = username.charCodeAt(i) + (hash << 5) - hash;
     }
     // Calculate color
     var index = Math.abs(hash % COLORS.length);
@@ -213,7 +301,7 @@ $(function() {
     if (event.which === 13) {
       if (username) {
         sendMessage();
-        socket.emit('stop typing');
+        socket.emit("stop typing");
         typing = false;
       } else {
         setUsername();
@@ -221,7 +309,7 @@ $(function() {
     }
   });
 
-  $inputMessage.on('input', function() {
+  $inputMessage.on("input", function () {
     updateTyping();
   });
 
@@ -240,41 +328,41 @@ $(function() {
   // Socket events
 
   // Whenever the server emits 'login', log the login message
-  socket.on('login', function (data) {
+  socket.on("login", function (data) {
     connected = true;
     // Display the welcome message
     var message = "";
     log(message, {
-      prepend: true
+      prepend: true,
     });
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'new message', update the chat body
-  socket.on('new message', function (data) {
+  socket.on("new message", function (data) {
     addChatMessage(data);
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
-  socket.on('user joined', function (data) {
-    log(data.username + ' joined');
+  socket.on("user joined", function (data) {
+    log(data.username + " joined");
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
-  socket.on('user left', function (data) {
-    log(data.username + ' left');
+  socket.on("user left", function (data) {
+    log(data.username + " left");
     addParticipantsMessage(data);
     removeChatTyping(data);
   });
 
   // Whenever the server emits 'typing', show the typing message
-  socket.on('typing', function (data) {
+  socket.on("typing", function (data) {
     addChatTyping(data);
   });
 
   // Whenever the server emits 'stop typing', kill the typing message
-  socket.on('stop typing', function (data) {
+  socket.on("stop typing", function (data) {
     removeChatTyping(data);
   });
 });
